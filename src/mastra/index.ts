@@ -5,13 +5,14 @@ import { LibSQLStore } from '@mastra/libsql';
 import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { toolCallAppropriatenessScorer, completenessScorer, translationScorer } from './scorers/weather-scorer';
+import { OllamaAgent } from './agents/mcpAgent';
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent },
+  // OllamaAgentを追加
+  agents: { weatherAgent, OllamaAgent },
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
   storage: new LibSQLStore({
-    // stores observability, scores, ... into memory storage, if it needs to persist, change to file:../mastra.db
     url: ":memory:",
   }),
   logger: new PinoLogger({
@@ -19,11 +20,12 @@ export const mastra = new Mastra({
     level: 'info',
   }),
   telemetry: {
-    // Telemetry is deprecated and will be removed in the Nov 4th release
+    // telemetry非推奨になり、廃止される予定
     enabled: false, 
   },
   observability: {
-    // Enables DefaultExporter and CloudExporter for AI tracing
+    // AI トレース用に DefaultExporter と CloudExporter を有効にする
     default: { enabled: true }, 
   },
 });
+

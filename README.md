@@ -101,9 +101,66 @@ npm install ollama-ai-provider-v2 @mastra/mcp @mastra/core dotenv
 }
 ```
 
+### 環境ファイルの作成
+```sh
+## サンプルファイルを基にenvファイルを作成
+cp .env.example .env
+```
 
+### ollama(gpt-oss:20b)のローカルLLMを使用したエージェントファイルを作成
 
+- 作成場所： src\mastra\agentsの配下
+- ファイル名: [mcpAgent.ts](./src/mastra/agents/mcpAgent.ts)
 
+### 作成したエージェントファイルを使用できるようにする。
+
+- 修正ファイル： [src\mastra\index.ts](./src/mastra/index.ts)
+
+- 追加するコード
+```ts
+// ### {省略} ###
+
+// 下記を追加
+import { OllamaAgent } from './agents/mcpAgent';
+
+export const mastra = new Mastra({
+  workflows: { weatherWorkflow },
+  // 下記の様にOllamaAgentを追加
+  agents: { weatherAgent, OllamaAgent },
+  
+  // ### {省略} ### 
+  },
+});
+```
+
+## mastraのサーバーを立ち上げる
+
+```sh
+# 開発サーバーの起動
+npm run dev
+
+# アプリケーションのビルド
+npm run build
+# プロダクション環境での起動
+npm run start
+
+```
+
+### ブラウザ画面
+
+http://localhost:4111/agents
+
+![ブラウザ画面](https://i.gyazo.com/afa4ae0a3e7be4c26af122d3eea610ea.png)
+
+### 作成したエージェントの使用例
+
+![作成したエージェントの使用例](https://i.gyazo.com/499da9aab41ef1c337e99e3cf45bce23.png)
+
+### 天気エージェント例（gpt-oss:20bモデル様に改変）
+
+![天気エージェント例1](https://i.gyazo.com/d8a0d799e87e0058ab59d5c06607fbfc.png)
+  
+![天気エージェント例2](https://i.gyazo.com/478e37c19ef5c0eea6fc906e0b373d13.png)
 
 
 ### 参考
